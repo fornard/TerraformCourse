@@ -1,6 +1,19 @@
+# Build WebServer during Bootstrap with External STATIC File
+# ElasticIP and Lifecycle to reduce Downtime
+
+
 provider "aws" {
     region = "us-west-2"
   
+}
+
+resource "aws_eip" "WebEip"{
+  instance=aws_instance.My_Ubuntu_LAB2.id
+  tags = {
+    Name = "TerraformTraining"
+    Owner = "Danilo Fornari"
+    Project = "LAB2"
+  }
 }
 
 resource "aws_instance" "My_Ubuntu_LAB2" {
@@ -18,22 +31,31 @@ resource "aws_instance" "My_Ubuntu_LAB2" {
     Owner = "Danilo Fornari"
     Project = "LAB2"
   }
+  lifecycle{
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group" "TerraformCourse" {
   name        = "WebServer-LAB"
   description = "Security Group for my WebServer_LAB2"
 
-  dynamic "ingress"{
-    for_each = ["80", "443"]
-    content{
-      description = "Allow port TCP"
-      from_port = ingress.value
-      to_port = ingress.value
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
+  ingress {
+    description = "Allow port HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
+
+  ingress {
+    description = "Allow port HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     description = "Allow ALL ports"
     from_port   = 0
