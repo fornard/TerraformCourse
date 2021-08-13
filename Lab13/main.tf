@@ -40,7 +40,7 @@ resource "aws_security_group" "web" {
   }
   tags = {
     Name  = "Web Security Group"
-    Owner = "Denis Astahov"
+    Owner = "Danilo Fornari"
   }
 }
 
@@ -70,7 +70,7 @@ resource "aws_autoscaling_group" "web" {
   dynamic "tag" {
     for_each = {
       Name   = "WebServer in ASG"
-      Owner  = "Denis Astahov"
+      Owner  = "Danilo Fornari"
       TAGKEY = "TAGVALUE"
     }
     content {
@@ -119,4 +119,8 @@ resource "aws_default_subnet" "default_az2" {
 
 output "web_loadbalancer_url" {
   value = aws_elb.web.dns_name
+}
+
+output "availability_zones_names" {
+  value = [data.aws_availability_zones.working.names]
 }
