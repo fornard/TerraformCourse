@@ -1,0 +1,2 @@
+Terraform START: $(date) 
+$NAME1 $NAME2 $NAME3 
